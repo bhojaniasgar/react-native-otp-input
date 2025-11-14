@@ -1,9 +1,8 @@
 // @ts-ignore
 import { InputProps, OTPInputViewState } from '@asgar/react-native-otp-input';
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { EmitterSubscription, Keyboard, TextInput, TouchableWithoutFeedback, View } from 'react-native';
 import styles from './styles';
-import { isAutoFillSupported } from './helpers/device';
 import { codeToArray } from './helpers/codeToArray';
 
 export default class OTPInputView extends Component<InputProps, OTPInputViewState> {
