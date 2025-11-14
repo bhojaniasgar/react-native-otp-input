@@ -65,16 +65,14 @@ jobs:
           git tag -a "v${{ steps.package-version.outputs.version }}" -m "Release v${{ steps.package-version.outputs.version }}"
           git push origin "v${{ steps.package-version.outputs.version }}"
         env:
-          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
       - name: Create GitHub Release
         if: steps.check-version.outputs.exists == 'false'
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+        uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ steps.package-version.outputs.version }}
-          release_name: Release v${{ steps.package-version.outputs.version }}
+          name: Release v${{ steps.package-version.outputs.version }}
           body: |
             ## 🎉 Release v${{ steps.package-version.outputs.version }}
             
@@ -89,6 +87,7 @@ jobs:
             See the [commit history](https://github.com/${{ github.repository }}/commits/v${{ steps.package-version.outputs.version }}) for details.
           draft: false
           prerelease: false
+          token: ${{ secrets.TOKEN }}
 
       - name: Skip Publishing (Version Exists)
         if: steps.check-version.outputs.exists == 'true'
