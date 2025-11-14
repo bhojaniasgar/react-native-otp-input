@@ -1,0 +1,70 @@
+{
+  "name": "@asgar/react-native-otp-input",
+  "version": "1.0.0",
+  "description": "A fully customizable, responsive OTP input component for React Native with autofill support",
+  "main": "lib/index.js",
+  "module": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build",
+    "lint": "eslint src --ext .ts,.tsx",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\"",
+    "clean": "rm -rf lib"
+  },
+  "keywords": [
+    "react-native",
+    "expo",
+    "otp",
+    "otp-input",
+    "verification-code",
+    "pin-code",
+    "pin-input",
+    "autofill",
+    "ios",
+    "android",
+    "expo-compatible",
+    "typescript"
+  ],
+  "author": "Asgar",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bhojaniasgar/react-native-otp-input.git"
+  },
+  "homepage": "https://github.com/bhojaniasgar/react-native-otp-input#readme",
+  "bugs": {
+    "url": "https://github.com/bhojaniasgar/react-native-otp-input/issues"
+  },
+  "peerDependencies": {
+    "@react-native-clipboard/clipboard": "*",
+    "react": "*",
+    "react-native": "*"
+  },
+  "peerDependenciesMeta": {
+    "@react-native-clipboard/clipboard": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@react-native-clipboard/clipboard": "^1.16.3",
+    "@types/react": "^19.1.1",
+    "@types/react-native": "^0.73.0",
+    "@typescript-eslint/eslint-plugin": "^8.46.4",
+    "@typescript-eslint/parser": "^8.46.4",
+    "eslint": "^8.19.0",
+    "eslint-plugin-react": "^7.33.0",
+    "eslint-plugin-react-native": "^5.0.0",
+    "prettier": "^3.6.2",
+    "react": "19.1.1",
+    "react-native": "0.82.1",
+    "typescript": "^5.8.3"
+  }
+}
