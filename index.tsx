@@ -1,5 +1,5 @@
 // @ts-ignore
-import { InputProps, OTPInputViewState } from '@asgar/react-native-otp-input';
+import { InputProps, OTPInputViewState } from '@bhojaniasgar/react-native-otp-input';
 import { Component } from 'react';
 import { EmitterSubscription, Keyboard, TextInput, TouchableWithoutFeedback, View } from 'react-native';
 import styles from './styles';

@@ -1,5 +1,5 @@
 {
-  "name": "@asgar/react-native-otp-input",
+  "name": "@bhojaniasgar/react-native-otp-input",
   "version": "1.0.0",
   "description": "A fully customizable, responsive OTP input component for React Native with autofill support",
   "main": "lib/index.js",

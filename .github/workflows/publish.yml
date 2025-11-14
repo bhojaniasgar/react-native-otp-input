@@ -82,7 +82,7 @@ jobs:
             
             ### Installation
             ```bash
-            npm install @asgar/react-native-otp-input@${{ steps.package-version.outputs.version }}
+            npm install @bhojaniasgar/react-native-otp-input@${{ steps.package-version.outputs.version }}
             ```
             
             ### Changes

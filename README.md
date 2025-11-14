@@ -1,6 +1,6 @@
-# @asgar/react-native-otp-input
+# @bhojaniasgar/react-native-otp-input
 
-[![npm version](https://badge.fury.io/js/%40asgar%2Freact-native-otp-input.svg)](https://www.npmjs.com/package/@asgar/react-native-otp-input)
+[![npm version](https://badge.fury.io/js/%40bhojaniasgar%2Freact-native-otp-input.svg)](https://www.npmjs.com/package/@bhojaniasgar/react-native-otp-input)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Expo Compatible](https://img.shields.io/badge/Expo-Compatible-blue.svg)](https://expo.dev)
 
@@ -22,25 +22,20 @@ A fully customizable, responsive OTP (One-Time Password) input component for Rea
 
 ## 📦 Installation
 
-### For Expo Projects
+### npm
 
-```bash
-npx expo install @asgar/react-native-otp-input
-```
+npx expo install @bhojaniasgar/react-native-otp-input
 
 ### For React Native CLI Projects
 
 ```bash
-# Using npm
-npm install @asgar/react-native-otp-input
+npm install @bhojaniasgar/react-native-otp-input
 
-# Using yarn
-yarn add @asgar/react-native-otp-input
+yarn add @bhojaniasgar/react-native-otp-input
 
-# Using pnpm
-pnpm add @asgar/react-native-otp-input
+pnpm add @bhojaniasgar/react-native-otp-input
 
-bun add @asgar/react-native-otp-input
+bun add @bhojaniasgar/react-native-otp-input
 ```
 
 ### Third Party Dependency
@@ -58,7 +53,7 @@ npm install @react-native-clipboard/clipboard
 ```tsx
 import React, { useState } from 'react';
 import { View } from 'react-native';
-import OTPInputView from '@asgar/react-native-otp-input';
+import OTPInputView from '@bhojaniasgar/react-native-otp-input';
 
 function App() {
   const [code, setCode] = useState('');
