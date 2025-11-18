@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
-import OTPInputView from '@bhojaniasgar/react-native-otp-input';
+import { OtpInputView } from '@bhojaniasgar/react-native-otp-input';
 import PageHeader from '../components/PageHeader';
 import CodeBlock from '../components/CodeBlock';
 
@@ -17,13 +17,13 @@ const SizeVariantsExample = () => {
     };
 
     const codeExample = `// Small
-<OTPInputView size="small" />
+<OtpInputView size="small" />
 
 // Medium (default)
-<OTPInputView size="medium" />
+<OtpInputView size="medium" />
 
 // Large
-<OTPInputView size="large" />`;
+<OtpInputView size="large" />`;
 
     return (
         <KeyboardAwareScrollView
@@ -40,7 +40,7 @@ const SizeVariantsExample = () => {
             <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Small</Text>
                 <View style={styles.otpWrapper}>
-                    <OTPInputView
+                    <OtpInputView
                         pinCount={6}
                         code={smallCode}
                         onCodeChanged={setSmallCode}
@@ -57,7 +57,7 @@ const SizeVariantsExample = () => {
             <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Medium (Default)</Text>
                 <View style={styles.otpWrapper}>
-                    <OTPInputView
+                    <OtpInputView
                         pinCount={6}
                         code={mediumCode}
                         onCodeChanged={setMediumCode}
@@ -74,7 +74,7 @@ const SizeVariantsExample = () => {
             <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Large</Text>
                 <View style={styles.otpWrapper}>
-                    <OTPInputView
+                    <OtpInputView
                         pinCount={6}
                         code={largeCode}
                         onCodeChanged={setLargeCode}
