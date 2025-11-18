@@ -53,14 +53,14 @@ npm install @react-native-clipboard/clipboard
 ```tsx
 import React, { useState } from 'react';
 import { View } from 'react-native';
-import OTPInputView from '@bhojaniasgar/react-native-otp-input';
+import { OtpInputView } from '@bhojaniasgar/react-native-otp-input';
 
 function App() {
   const [code, setCode] = useState('');
 
   return (
     <View style={{ padding: 20 }}>
-      <OTPInputView
+      <OtpInputView
         pinCount={6}
         code={code}
         onCodeChanged={setCode}
@@ -73,6 +73,34 @@ function App() {
   );
 }
 ```
+
+## 🔄 Auto-Fill Support
+
+Enable automatic OTP code detection from clipboard on Android devices:
+
+```tsx
+import { OtpInputView } from '@bhojaniasgar/react-native-otp-input';
+
+<OtpInputView
+  pinCount={6}
+  code={code}
+  onCodeChanged={setCode}
+  onCodeFilled={(code) => console.log('Auto-filled:', code)}
+  autoFill={true} // Enable clipboard auto-detection
+/>
+```
+
+**How it works:**
+- When `autoFill` is enabled, the component monitors the clipboard for OTP codes
+- Automatically detects numeric codes matching the `pinCount` length
+- Works seamlessly on Android devices
+- Provides better paste support and field management
+- No manual intervention required - just copy the OTP and it auto-fills!
+
+**Requirements:**
+- `@react-native-clipboard/clipboard` must be installed (see Installation section)
+- Only works on Android platform
+- OTP code must be numeric and match the specified `pinCount`
 
 ## 📖 Examples
 
@@ -100,6 +128,7 @@ The examples include:
 | `onCodeChanged` | `(code: string) => void` | `undefined` | Callback fired when any digit changes |
 | `onCodeFilled` | `(code: string) => void` | `undefined` | Callback fired when all digits are filled |
 | `autoFocusOnLoad` | `boolean` | `true` | Auto focus first input on mount |
+| `autoFill` | `boolean` | `false` | Enable automatic OTP detection from clipboard (Android only) |
 | `secureTextEntry` | `boolean` | `false` | Hide input text (secure entry) |
 | `editable` | `boolean` | `true` | Enable/disable input editing |
 | `clearInputs` | `boolean` | `false` | Clear all inputs when true |

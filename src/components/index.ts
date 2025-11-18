@@ -1,3 +1,2 @@
-export { default as OTPInputView } from './OTPInputView';
-export { default as OTPInputViewAutoFilled } from './OTPInputViewAutoFilled';
+export { default as OtpInputView } from './OTPInputView';
 export { default } from './OTPInputView';

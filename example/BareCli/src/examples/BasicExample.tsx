@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
-import OTPInputView from '@bhojaniasgar/react-native-otp-input';
+import { OtpInputView } from '@bhojaniasgar/react-native-otp-input';
 import PageHeader from '../components/PageHeader';
 import CodeBlock from '../components/CodeBlock';
 
@@ -17,7 +17,7 @@ const BasicExample = () => {
         setCode('');
     };
 
-    const codeExample = `<OTPInputView
+    const codeExample = `<OtpInputView
   pinCount={6}
   code={code}
   onCodeChanged={setCode}
@@ -43,7 +43,7 @@ const BasicExample = () => {
                 <Text style={styles.sectionTitle}>Try it out</Text>
 
                 <View style={styles.otpWrapper}>
-                    <OTPInputView
+                    <OtpInputView
                         pinCount={6}
                         code={code}
                         onCodeChanged={setCode}
