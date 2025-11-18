@@ -1,0 +1,74 @@
+name: Submit to React Native Directory
+
+on:
+  workflow_dispatch:
+    inputs:
+      submit:
+        description: 'Submit to React Native Directory'
+        required: false
+        default: 'true'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  submit:
+    name: Submit Package to React Native Directory
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+      - name: Install GitHub CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gh
+      
+      - name: Authenticate with GitHub
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+      
+      - name: Download submit script
+        run: |
+          mkdir -p ./scripts
+          curl -sSL https://raw.githubusercontent.com/bhojaniasgar/react-native-otp-input/Development/scripts/submit-to-directory.sh -o ./scripts/submit-to-directory.sh
+          chmod +x ./scripts/submit-to-directory.sh
+      
+      - name: Run submission pipeline
+        run: |
+          bash ./scripts/submit-to-directory.sh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Create job summary
+        if: success()
+        run: |
+          echo "# ✅ React Native Directory Submission" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Your package **@bhojaniasgar/react-native-otp-input** has been successfully submitted to the React Native Directory!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📊 Package Details:" >> $GITHUB_STEP_SUMMARY
+          echo "- **Name**: @bhojaniasgar/react-native-otp-input" >> $GITHUB_STEP_SUMMARY
+          echo "- **GitHub**: https://github.com/bhojaniasgar/react-native-otp-input" >> $GITHUB_STEP_SUMMARY
+          echo "- **npm**: https://www.npmjs.com/package/@bhojaniasgar/react-native-otp-input" >> $GITHUB_STEP_SUMMARY
+          echo "- **Platforms**: iOS, Android, Expo Go" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "🎯 Next Steps:" >> $GITHUB_STEP_SUMMARY
+          echo "1. Check the PR on https://github.com/react-native-community/directory/pulls" >> $GITHUB_STEP_SUMMARY
+          echo "2. Wait for maintainers to review" >> $GITHUB_STEP_SUMMARY
+          echo "3. Address any feedback if needed" >> $GITHUB_STEP_SUMMARY
+      
+      - name: Report failure
+        if: failure()
+        run: |
+          echo "❌ Submission failed. Check logs above for details."
+          exit 1
