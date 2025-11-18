@@ -8,7 +8,7 @@ import {
     Alert,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
-import { OTPInputViewAutoFilled } from '@bhojaniasgar/react-native-otp-input';
+import { OtpInputView } from '@bhojaniasgar/react-native-otp-input';
 import Clipboard from '@react-native-clipboard/clipboard';
 import PageHeader from '../components/PageHeader';
 import CodeBlock from '../components/CodeBlock';
@@ -31,16 +31,17 @@ const AutoFillExample = () => {
         Alert.alert('Copied!', `Test OTP "${testOTP}" copied to clipboard`);
     };
 
-    const codeExample = `import { OTPInputViewAutoFilled } 
+    const codeExample = `import { OtpInputView } 
   from '@bhojaniasgar/react-native-otp-input';
 
-<OTPInputViewAutoFilled
+<OtpInputView
   pinCount={6}
   code={code}
   onCodeChanged={setCode}
   onCodeFilled={(code) => {
     console.log('Auto-filled:', code);
   }}
+  autoFill={true}
   autoFocusOnLoad
 />`;
 
@@ -64,11 +65,12 @@ const AutoFillExample = () => {
                 <Text style={styles.sectionTitle}>Try it out</Text>
 
                 <View style={styles.otpWrapper}>
-                    <OTPInputViewAutoFilled
+                    <OtpInputView
                         pinCount={6}
                         code={code}
                         onCodeChanged={setCode}
                         onCodeFilled={handleCodeFilled}
+                        autoFill={true}
                         autoFocusOnLoad={false}
                         codeInputFieldStyle={styles.inputField}
                         codeInputHighlightStyle={styles.inputFieldFocused}

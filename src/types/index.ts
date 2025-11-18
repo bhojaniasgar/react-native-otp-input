@@ -36,6 +36,13 @@ export interface OTPInputProps {
     autoFocusOnLoad?: boolean;
 
     /**
+     * Enable automatic OTP code detection from clipboard (Android only)
+     * When enabled, the component will automatically check clipboard for OTP codes
+     * @default false
+     */
+    autoFill?: boolean;
+
+    /**
      * Hide input text (for secure entry)
      * @default false
      */
