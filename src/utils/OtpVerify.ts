@@ -19,7 +19,6 @@ const eventEmitter = RNOtpVerify ? new NativeEventEmitter(RNOtpVerify) : null;
 interface OtpVerify {
   getOtp: () => Promise<boolean>;
   getHash: () => Promise<string[]>;
-  setHash: (hash: string) => Promise<boolean>;
   requestHint: () => Promise<string>;
   startOtpListener: (
     handler: (value: string) => void
@@ -94,6 +93,18 @@ export const useOtpVerify = ({ numberOfDigits } = { numberOfDigits: 0 }) => {
   return { otp, message, hash, timeoutError, stopListener, startListener };
 };
 
+/**
+ * Gets the app signature hash required for SMS Retriever API.
+ * This hash is computed from your app's package name and signing certificate.
+ * 
+ * IMPORTANT: Your SMS messages MUST include this exact hash for the SMS Retriever
+ * API to deliver them to your app.
+ * 
+ * SMS Format: <#> Your OTP is 123456 [YOUR_HASH_HERE]
+ * Example: <#> Your OTP is 123456 L1lD8GP/5Eo
+ * 
+ * @returns Array of signature hashes (usually contains one hash)
+ */
 export async function getHash(): Promise<string[]> {
   if (Platform.OS === 'ios') {
     console.warn('Not Supported on iOS');
@@ -105,16 +116,7 @@ export async function getHash(): Promise<string[]> {
   return RNOtpVerify.getHash();
 }
 
-export async function setHash(hash: string): Promise<boolean> {
-  if (Platform.OS === 'ios') {
-    console.warn('Not Supported on iOS');
-    return false;
-  }
-  if (!RNOtpVerify) {
-    throw new Error(LINKING_ERROR);
-  }
-  return RNOtpVerify.setHash(hash);
-}
+
 
 export async function requestHint(): Promise<string> {
   if (Platform.OS === 'ios') {
@@ -151,7 +153,6 @@ export function removeListener(): void {
 const OtpVerify: OtpVerify = {
   getOtp,
   getHash,
-  setHash,
   addListener,
   removeListener,
   startOtpListener,

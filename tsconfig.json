@@ -21,7 +21,8 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "types": ["react-native"]
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "lib", "example", "**/*.test.ts", "**/*.test.tsx"]

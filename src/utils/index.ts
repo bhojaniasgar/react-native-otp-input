@@ -10,7 +10,6 @@ export { isAutoFillSupported } from './device';
 export {
     getOtp,
     getHash,
-    setHash,
     requestHint,
     startOtpListener,
     addListener,

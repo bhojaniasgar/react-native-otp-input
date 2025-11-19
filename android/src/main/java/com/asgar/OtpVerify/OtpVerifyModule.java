@@ -45,7 +45,6 @@ public class OtpVerifyModule extends ReactContextBaseJavaModule implements Lifec
     private final ReactApplicationContext reactContext;
     private BroadcastReceiver mReceiver;
     private boolean isReceiverRegistered = false;
-    private ArrayList<String> customHash = null;
 
     public OtpVerifyModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -104,37 +103,17 @@ public class OtpVerifyModule extends ReactContextBaseJavaModule implements Lifec
     @ReactMethod
     public void getHash(Promise promise) {
         try {
-            ArrayList<String> signatures;
-            
-            // Use custom hash if set, otherwise compute from app signature
-            if (customHash != null && !customHash.isEmpty()) {
-                signatures = customHash;
-            } else {
-                AppSignatureHelper helper = new AppSignatureHelper(reactContext);
-                signatures = helper.getAppSignatures();
-            }
+            // IMPORTANT: Always return the actual computed hash from app signature
+            // The SMS Retriever API ONLY accepts messages with this exact hash
+            // This hash is determined by your app's package name and signing certificate
+            AppSignatureHelper helper = new AppSignatureHelper(reactContext);
+            ArrayList<String> signatures = helper.getAppSignatures();
             
             WritableArray arr = Arguments.createArray();
             for (String s : signatures) {
                 arr.pushString(s);
             }
             promise.resolve(arr);
-        } catch (Exception e) {
-            promise.reject(e);
-        }
-    }
-
-    @ReactMethod
-    public void setHash(String hash, Promise promise) {
-        try {
-            if (hash == null || hash.isEmpty()) {
-                // Clear custom hash to use computed hash
-                customHash = null;
-            } else {
-                customHash = new ArrayList<>();
-                customHash.add(hash);
-            }
-            promise.resolve(true);
         } catch (Exception e) {
             promise.reject(e);
         }

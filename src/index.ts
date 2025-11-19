@@ -12,7 +12,6 @@ export type { SizeConfig } from './utils/responsive';
 export {
   getOtp,
   getHash,
-  setHash,
   requestHint,
   startOtpListener,
   addListener,

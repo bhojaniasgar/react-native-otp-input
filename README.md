@@ -123,14 +123,14 @@ function App() {
 
   useEffect(() => {
     if (Platform.OS === 'android') {
-      // Optional: Set custom hash if you want to use a specific one
-      // setHash('L1lD8GP/5Eo').then(() => console.log('Custom hash set'));
-      
       // Get app hash for SMS format
+      // IMPORTANT: This hash is computed from your app's signing certificate
+      // and cannot be changed. Use this EXACT hash in your backend SMS.
       getHash()
-        .then((hash) => {
-          console.log('App Hash:', hash);
-          // Use this hash in your backend SMS: <#> Your OTP is 123456 <hash>
+        .then((hashes) => {
+          console.log('App Hash:', hashes);
+          // Use this hash in your backend SMS: <#> Your OTP is 123456 [hash]
+          // Example: <#> Your OTP is 123456 L1lD8GP/5Eo
         })
         .catch((error) => console.error('Error getting hash:', error));
 
@@ -166,7 +166,6 @@ function App() {
 ```tsx
 import {
   getHash,           // Get app hash for SMS format
-  setHash,           // Set custom app hash (optional)
   startOtpListener,  // Start listening for OTP SMS
   addListener,       // Add custom listener
   removeListener,    // Remove all listeners
@@ -176,37 +175,39 @@ import {
 } from '@bhojaniasgar/react-native-otp-input';
 ```
 
-**Setting a Custom Hash:**
+**Understanding App Hash:**
 
-By default, `getHash()` computes the hash from your app's signature. However, you can set a custom hash if needed:
+The app hash is computed from your app's package name and signing certificate. This hash **cannot be changed at runtime** - it's determined by Android based on your app's signature.
 
 ```tsx
-import { setHash, getHash } from '@bhojaniasgar/react-native-otp-input';
+import { getHash } from '@bhojaniasgar/react-native-otp-input';
 
-// Set your custom hash
-await setHash('L1lD8GP/5Eo');
+// Get your app's computed hash
+const hashes = await getHash(); 
+console.log('App Hash:', hashes); // e.g., ['L1lD8GP/5Eo']
 
-// Now getHash() will return your custom hash
-const hash = await getHash(); // Returns ['L1lD8GP/5Eo']
-
-// To clear and use computed hash again
-await setHash('');
+// IMPORTANT: Use this EXACT hash in your backend SMS messages
+// The hash is computed from your app's signing certificate and cannot be changed
 ```
 
 **SMS Format Requirements:**
 - SMS must start with `<#>`
 - Must contain your app hash at the end (exact match required)
-- Example: `<#> Your OTP is 123456 FA+9qCX9VSu`
+- Example: `<#> Your OTP is 123456 L1lD8GP/5Eo`
 
 **Security & Hash Validation:** 
-The Android SMS Retriever API validates the hash at the system level. Only SMS messages with the **exact matching hash** will be delivered to your app.
+The Android SMS Retriever API validates the hash at the **system level**. Only SMS messages with the **exact matching hash** will be delivered to your app.
 
 Examples:
 - ✅ App hash: `L1lD8GP/5Eo` | SMS: `<#> Your OTP is 123456 L1lD8GP/5Eo` → **Works**
 - ❌ App hash: `L1lD8GP/5Eo` | SMS: `<#> Your OTP is 123456 L1lD8GP/5Eo1wdf` → **Blocked by Android**
 - ❌ App hash: `L1lD8GP/5Eo` | SMS: `<#> Your OTP is 123456 DIFFERENT` → **Blocked by Android**
 
-This ensures only legitimate SMS messages from your backend can trigger OTP auto-fill.
+**Important Notes:**
+- The hash is tied to your app's signing certificate
+- Debug builds and release builds may have different hashes (different certificates)
+- You cannot override or change this hash - it's computed by Android
+- Always use `getHash()` to get the correct hash for your SMS messages
 
 **Note:** SMS Retriever API only works on Android. iOS users should use clipboard auto-fill or manual entry.
 

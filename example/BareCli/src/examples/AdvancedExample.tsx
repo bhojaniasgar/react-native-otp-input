@@ -4,7 +4,8 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { OtpInputView, } from '@bhojaniasgar/react-native-otp-input';
 import PageHeader from '../components/PageHeader';
 import CodeBlock from '../components/CodeBlock';
-import { getHash, setHash, startOtpListener, removeListener } from '@bhojaniasgar/react-native-otp-input';
+import { getHash, startOtpListener, removeListener } from '@bhojaniasgar/react-native-otp-input';
+
 
 
 const AdvancedExample = () => {
@@ -21,26 +22,9 @@ const AdvancedExample = () => {
             return;
         }
 
-        // const setHashIn = async () => {
-        //     await setHash('asgarTest')
-        // }
-
-        // setHashIn()
-        // Optional: Set custom hash if needed
-        // Uncomment the line below to use a custom hash instead of computed one
-        // setHash('L1lD8GP/5Eo').then(() => console.log('Custom hash set'));
-
-        // IMPORTANT: Android SMS Retriever API validates hash at system level
-        // Only SMS with EXACT matching hash will be delivered to your app
-        // Example: If hash is 'L1lD8GP/5Eo', SMS must end with exactly 'L1lD8GP/5Eo'
-        // SMS with 'L1lD8GP/5Eo1wdf' or any other variation will be blocked by Android
-
-
-        // Get app hash for SMS Retriever API
         getHash()
-            .then((hash) => {
-                console.log('App Hash:', hash);
-                // Use this hash in your backend SMS: <#> Your OTP is 123456 <hash>
+            .then((hashes) => {
+                console.log('App Hash:', hashes);
             })
             .catch((error) => {
                 console.error('Error getting hash:', error);
