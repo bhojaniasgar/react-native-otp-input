@@ -31,7 +31,7 @@ export default class OTPInputView extends Component<OTPInputProps, OTPInputState
 
     private fields: (TextInput | null)[] = [];
     private keyboardDidHideListener?: EmitterSubscription;
-    private timer?: NodeJS.Timeout;
+    private timer?: ReturnType<typeof setTimeout>;
     private hasCheckedClipBoard?: boolean;
     private clipBoardCode?: string;
 
@@ -119,7 +119,7 @@ export default class OTPInputView extends Component<OTPInputProps, OTPInputState
         if (!Clipboard) return;
 
         const { pinCount = 6, onCodeFilled, autoFill } = this.props;
-        
+
         // Only check clipboard if autoFill is enabled
         if (!autoFill) return;
 
@@ -248,7 +248,7 @@ export default class OTPInputView extends Component<OTPInputProps, OTPInputState
     private handleKeyPressTextInput = (index: number, key: string) => {
         const { autoFill } = this.props;
         const digits = this.getDigits();
-        
+
         if (key === 'Backspace') {
             if (autoFill) {
                 // AutoFill mode - better backspace handling

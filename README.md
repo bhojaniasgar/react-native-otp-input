@@ -76,6 +76,8 @@ function App() {
 
 ## 🔄 Auto-Fill Support
 
+### Clipboard Auto-Fill (Android)
+
 Enable automatic OTP code detection from clipboard on Android devices:
 
 ```tsx
@@ -102,20 +104,138 @@ import { OtpInputView } from '@bhojaniasgar/react-native-otp-input';
 - Only works on Android platform
 - OTP code must be numeric and match the specified `pinCount`
 
-## 📖 Examples
+### SMS Retriever API (Android)
 
-For comprehensive examples including custom styling, size variants, auto-fill, error states, and more
- <!-- check out our **[Examples Documentation](./example/EXAMPLES.md)**. -->
+For automatic SMS OTP detection using Android's SMS Retriever API:
 
-The examples include:
+```tsx
+import React, { useEffect, useState } from 'react';
+import { Platform } from 'react-native';
+import { 
+  OtpInputView, 
+  getHash, 
+  startOtpListener, 
+  removeListener 
+} from '@bhojaniasgar/react-native-otp-input';
+
+function App() {
+  const [code, setCode] = useState('');
+
+  useEffect(() => {
+    if (Platform.OS === 'android') {
+      // Get app hash for SMS format
+      // IMPORTANT: This hash is computed from your app's signing certificate
+      // and cannot be changed. Use this EXACT hash in your backend SMS.
+      getHash()
+        .then((hashes) => {
+          console.log('App Hash:', hashes);
+          // Use this hash in your backend SMS: <#> Your OTP is 123456 [hash]
+          // Example: <#> Your OTP is 123456 L1lD8GP/5Eo
+        })
+        .catch((error) => console.error('Error getting hash:', error));
+
+      // Start listening for OTP SMS
+      startOtpListener((message: string) => {
+        if (!message) return;
+        
+        // Extract OTP from SMS message
+        const otp = /(\d{6})/g.exec(message);
+        if (otp && otp[1]) {
+          setCode(otp[1]);
+        }
+      });
+
+      // Cleanup listener on unmount
+      return () => removeListener();
+    }
+  }, []);
+
+  return (
+    <OtpInputView
+      pinCount={6}
+      code={code}
+      onCodeChanged={setCode}
+      onCodeFilled={(code) => console.log('OTP verified:', code)}
+    />
+  );
+}
+```
+
+**Available SMS Retriever API Functions:**
+
+```tsx
+import {
+  getHash,           // Get app hash for SMS format
+  startOtpListener,  // Start listening for OTP SMS
+  addListener,       // Add custom listener
+  removeListener,    // Remove all listeners
+  getOtp,           // Request OTP (triggers SMS Retriever)
+  requestHint,      // Request phone number hint
+  useOtpVerify,     // React hook for OTP verification
+} from '@bhojaniasgar/react-native-otp-input';
+```
+
+**Understanding App Hash:**
+
+The app hash is computed from your app's package name and signing certificate. This hash **cannot be changed at runtime** - it's determined by Android based on your app's signature.
+
+```tsx
+import { getHash } from '@bhojaniasgar/react-native-otp-input';
+
+// Get your app's computed hash
+const hashes = await getHash(); 
+console.log('App Hash:', hashes); // e.g., ['L1lD8GP/5Eo']
+
+// IMPORTANT: Use this EXACT hash in your backend SMS messages
+// The hash is computed from your app's signing certificate and cannot be changed
+```
+
+**SMS Format Requirements:**
+- SMS must start with `<#>`
+- Must contain your app hash at the end (exact match required)
+- Example: `<#> Your OTP is 123456 L1lD8GP/5Eo`
+
+**Security & Hash Validation:** 
+The Android SMS Retriever API validates the hash at the **system level**. Only SMS messages with the **exact matching hash** will be delivered to your app.
+
+Examples:
+- ✅ App hash: `L1lD8GP/5Eo` | SMS: `<#> Your OTP is 123456 L1lD8GP/5Eo` → **Works**
+- ❌ App hash: `L1lD8GP/5Eo` | SMS: `<#> Your OTP is 123456 L1lD8GP/5Eo1wdf` → **Blocked by Android**
+- ❌ App hash: `L1lD8GP/5Eo` | SMS: `<#> Your OTP is 123456 DIFFERENT` → **Blocked by Android**
+
+**Important Notes:**
+- The hash is tied to your app's signing certificate
+- Debug builds and release builds may have different hashes (different certificates)
+- You cannot override or change this hash - it's computed by Android
+- Always use `getHash()` to get the correct hash for your SMS messages
+
+**Note:** SMS Retriever API only works on Android. iOS users should use clipboard auto-fill or manual entry.
+
+## 📖 Documentation
+
+### Getting Started
+- **[Quick Start Guide](./QUICK_START.md)** - Get started in 5 minutes ⚡
+- **[Installation & Setup](#-installation)** - Installation instructions
+
+### Guides & References
+- **[Usage Guide](./USAGE.md)** - Comprehensive examples and patterns 📚
+- **[API Reference](./API.md)** - Complete API documentation 📖
+- **[Migration Guide](./MIGRATION.md)** - Upgrade from previous versions 🔄
+
+### Updates & Examples
+- **[Changelog](./CHANGELOG.md)** - Version history and updates 📝
+- **[Examples](./example/BareCli/src/examples/)** - Live code examples 💻
+
+### Examples Include:
 - 🎨 Custom styling and themes
 - 📏 Size presets and variants
-- 🔄 Auto-fill support
+- 🔄 Auto-fill support (clipboard & SMS)
 - ❌ Error state handling
 - 🔒 Secure entry
+- ⚙️ Advanced configurations
 
-### Note - Expo Example Comming soon
-<!-- **[View All Examples →](./example/EXAMPLES.md)** -->
+### Note
+Expo Example Coming Soon!
 
 ## 📚 API Reference
 
@@ -176,13 +296,18 @@ Want to see the component in action? Check out our example apps:
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! We'd love your help making this package better.
 
+**[Read the Contributing Guide →](./CONTRIBUTING.md)**
+
+Quick steps:
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed guidelines.
 
 ## 📄 License
 
