@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Switch, Platform } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
-import { OtpInputView, OTPInputViewRef } from '@bhojaniasgar/react-native-otp-input';
+import { OtpInputView, OTPInputView } from '@bhojaniasgar/react-native-otp-input';
 import PageHeader from '../components/PageHeader';
 import CodeBlock from '../components/CodeBlock';
 import { getHash, startOtpListener, removeListener } from '@bhojaniasgar/react-native-otp-input';
@@ -14,7 +14,7 @@ const AdvancedExample = () => {
     const [editable, setEditable] = useState(true);
     const [pinCount, setPinCount] = useState(6);
     const [showError, setShowError] = useState(false);
-    const otpInputRef = useRef<OTPInputViewRef>(null);
+    const otpInputRef = useRef<OTPInputView>(null);
     const isIOS = Platform.OS === 'ios';
 
     useEffect(() => {
@@ -96,10 +96,10 @@ const AdvancedExample = () => {
     };
 
     const codeExample = `import { useRef } from 'react';
-import { OtpInputView, OTPInputViewRef } from '@bhojaniasgar/react-native-otp-input';
+import { OtpInputView, OTPInputView } from '@bhojaniasgar/react-native-otp-input';
 
 const [code, setCode] = useState('');
-const otpInputRef = useRef<OTPInputViewRef>(null);
+const otpInputRef = useRef<OTPInputView>(null);
 
 // Set value using ref
 const handleSetValue = () => {

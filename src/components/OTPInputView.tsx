@@ -8,12 +8,12 @@ import {
     TouchableWithoutFeedback,
     View
 } from 'react-native';
-import { OTPInputProps, OTPInputState } from '../types';
+import { OTPInputProps, OTPInputState, OTPInputViewRef } from '../types';
 import { codeToArray } from '../utils/codeToArray';
 import { getSizeConfig } from '../utils/responsive';
 import Clipboard from '@react-native-clipboard/clipboard';
 
-class OTPInputView extends Component<OTPInputProps, OTPInputState> {
+class OTPInputView extends Component<OTPInputProps, OTPInputState> implements OTPInputViewRef {
     static defaultProps: Partial<OTPInputProps> = {
         pinCount: 6,
         autoFocusOnLoad: true,
