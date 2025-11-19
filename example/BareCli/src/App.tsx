@@ -10,6 +10,7 @@ import CustomizedExample from './examples/CustomizedExample';
 import AutoFillExample from './examples/AutoFillExample';
 import SizeVariantsExample from './examples/SizeVariantsExample';
 import ErrorStateExample from './examples/ErrorStateExample';
+import AdvancedExample from './examples/AdvancedExample';
 
 // Import icons
 const homeIcon = require('./assets/home.png');
@@ -17,6 +18,7 @@ const paletteIcon = require('./assets/palette.png');
 const boltIcon = require('./assets/bolt.png');
 const rulerIcon = require('./assets/ruler.png');
 const warningIcon = require('./assets/warning.png');
+// const settingsIcon = require('./assets/settings.png');
 
 const Tab = createBottomTabNavigator();
 
@@ -111,6 +113,23 @@ function App(): React.JSX.Element {
                             component={ErrorStateExample}
                             options={{
                                 title: 'Error',
+                                tabBarIcon: ({ focused }) => (
+                                    <Image
+                                        source={warningIcon}
+                                        style={{
+                                            width: 20,
+                                            height: 20,
+                                            tintColor: focused ? '#4A90E2' : '#666666'
+                                        }}
+                                    />
+                                )
+                            }}
+                        />
+                        <Tab.Screen
+                            name="Advanced"
+                            component={AdvancedExample}
+                            options={{
+                                title: 'Advanced',
                                 tabBarIcon: ({ focused }) => (
                                     <Image
                                         source={warningIcon}

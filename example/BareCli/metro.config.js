@@ -16,11 +16,18 @@ const config = {
   resolver: {
     nodeModulesPaths: [
       path.resolve(projectRoot, 'node_modules'),
-      path.resolve(workspaceRoot, 'node_modules'),
     ],
     extraNodeModules: {
       '@bhojaniasgar/react-native-otp-input': path.resolve(workspaceRoot, 'src'),
+      // Force React and React Native to resolve from example app only
+      'react': path.resolve(projectRoot, 'node_modules/react'),
+      'react-native': path.resolve(projectRoot, 'node_modules/react-native'),
     },
+    // Block resolution from workspace node_modules to prevent duplicate React
+    blockList: [
+      new RegExp(`${workspaceRoot}/node_modules/react/`),
+      new RegExp(`${workspaceRoot}/node_modules/react-native/`),
+    ],
   },
 };
 
