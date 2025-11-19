@@ -197,3 +197,30 @@ export interface SizeConfig {
     spacing: number;
     borderRadius: number;
 }
+
+/**
+ * OTP Input component ref methods
+ */
+export interface OTPInputViewRef {
+    /**
+     * Set the OTP value programmatically
+     * @param value - OTP code to set
+     */
+    setValue: (value: string) => void;
+
+    /**
+     * Clear all input fields
+     */
+    clear: () => void;
+
+    /**
+     * Focus on a specific input field
+     * @param index - Index of field to focus (default: 0)
+     */
+    focusField: (index?: number) => void;
+
+    /**
+     * Blur all input fields
+     */
+    blurAllFields: () => void;
+}

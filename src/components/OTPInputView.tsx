@@ -13,7 +13,7 @@ import { codeToArray } from '../utils/codeToArray';
 import { getSizeConfig } from '../utils/responsive';
 import Clipboard from '@react-native-clipboard/clipboard';
 
-export default class OTPInputView extends Component<OTPInputProps, OTPInputState> {
+class OTPInputView extends Component<OTPInputProps, OTPInputState> {
     static defaultProps: Partial<OTPInputProps> = {
         pinCount: 6,
         autoFocusOnLoad: true,
@@ -284,7 +284,7 @@ export default class OTPInputView extends Component<OTPInputProps, OTPInputState
         }
     };
 
-    focusField = (index: number) => {
+    focusField = (index: number = 0) => {
         const { pinCount = 6 } = this.props;
         // Ensure index is within bounds
         const safeIndex = Math.max(0, Math.min(index, pinCount - 1));
@@ -316,6 +316,37 @@ export default class OTPInputView extends Component<OTPInputProps, OTPInputState
                 selectedIndex: 0,
             });
         }
+    };
+
+    /**
+     * Public method to set OTP value programmatically
+     * @param value - OTP code to set
+     */
+    setValue = (value: string) => {
+        const { pinCount = 6, onCodeChanged, onCodeFilled } = this.props;
+        const digits = value.split('').slice(0, pinCount);
+
+        this.setState({ digits }, () => {
+            const code = digits.join('');
+            onCodeChanged?.(code);
+
+            if (digits.length >= pinCount) {
+                onCodeFilled?.(code);
+            }
+        });
+    };
+
+    /**
+     * Public method to clear all fields
+     */
+    clear = () => {
+        const { onCodeChanged } = this.props;
+        this.setState({
+            digits: [],
+            selectedIndex: 0,
+        }, () => {
+            onCodeChanged?.('');
+        });
     };
 
     renderOneInputField = (_: TextInput | null, index: number) => {
@@ -459,3 +490,5 @@ export default class OTPInputView extends Component<OTPInputProps, OTPInputState
         );
     }
 }
+
+export default OTPInputView;

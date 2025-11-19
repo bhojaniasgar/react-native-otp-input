@@ -2,7 +2,7 @@
 export { default, OtpInputView } from './components';
 
 // Type exports
-export type { OTPInputProps, OTPInputState } from './types';
+export type { OTPInputProps, OTPInputState, OTPInputViewRef } from './types';
 
 // Utility exports (for advanced users)
 export { ResponsiveHelper, SIZES, getSizeConfig, codeToArray, isAutoFillSupported } from './utils';

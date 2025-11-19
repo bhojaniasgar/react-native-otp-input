@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { TextInput } from 'react-native';
 import { OTPInputProps, OTPInputState } from '../types';
-export default class OTPInputView extends Component<OTPInputProps, OTPInputState> {
+declare class OTPInputView extends Component<OTPInputProps, OTPInputState> {
     static defaultProps: Partial<OTPInputProps>;
     private fields;
     private keyboardDidHideListener?;
@@ -22,11 +22,21 @@ export default class OTPInputView extends Component<OTPInputProps, OTPInputState
     private handleKeyPressTextInput;
     private handleFocus;
     private handleBlur;
-    focusField: (index: number) => void;
+    focusField: (index?: number) => void;
     blurAllFields: () => void;
     clearAllFields: () => void;
+    /**
+     * Public method to set OTP value programmatically
+     * @param value - OTP code to set
+     */
+    setValue: (value: string) => void;
+    /**
+     * Public method to clear all fields
+     */
+    clear: () => void;
     renderOneInputField: (_: TextInput | null, index: number) => React.JSX.Element;
     renderTextFields: () => React.JSX.Element[];
     render(): React.JSX.Element;
 }
+export default OTPInputView;
 //# sourceMappingURL=OTPInputView.d.ts.map

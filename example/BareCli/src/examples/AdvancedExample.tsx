@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Switch, Platform } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
-import { OtpInputView, } from '@bhojaniasgar/react-native-otp-input';
+import { OtpInputView, OTPInputViewRef } from '@bhojaniasgar/react-native-otp-input';
 import PageHeader from '../components/PageHeader';
 import CodeBlock from '../components/CodeBlock';
 import { getHash, startOtpListener, removeListener } from '@bhojaniasgar/react-native-otp-input';
@@ -14,7 +14,7 @@ const AdvancedExample = () => {
     const [editable, setEditable] = useState(true);
     const [pinCount, setPinCount] = useState(6);
     const [showError, setShowError] = useState(false);
-    const otpInputRef = useRef<any>(null);
+    const otpInputRef = useRef<OTPInputViewRef>(null);
     const isIOS = Platform.OS === 'ios';
 
     useEffect(() => {
@@ -41,6 +41,8 @@ const AdvancedExample = () => {
                 return;
             }
             setCode(otp[1]);
+            // Use ref to set value programmatically
+            otpInputRef.current?.setValue(otp[1]);
         });
         return () => removeListener();
     }, [isIOS]);
@@ -59,9 +61,15 @@ const AdvancedExample = () => {
     const handleReset = () => {
         setCode('');
         setShowError(false);
-        if (otpInputRef.current) {
-            otpInputRef.current.clear();
-        }
+        // Use ref to clear all fields
+        otpInputRef.current?.clear();
+    };
+
+    const handleSetTestCode = () => {
+        const testCode = '123456'.slice(0, pinCount);
+        setCode(testCode);
+        // Use ref to set value programmatically
+        otpInputRef.current?.setValue(testCode);
     };
 
     const handleVerify = () => {
@@ -87,17 +95,36 @@ const AdvancedExample = () => {
         setShowError(false);
     };
 
-    const codeExample = `const [code, setCode] = useState('');
-const [secureEntry, setSecureEntry] = useState(false);
+    const codeExample = `import { useRef } from 'react';
+import { OtpInputView, OTPInputViewRef } from '@bhojaniasgar/react-native-otp-input';
+
+const [code, setCode] = useState('');
+const otpInputRef = useRef<OTPInputViewRef>(null);
+
+// Set value using ref
+const handleSetValue = () => {
+  otpInputRef.current?.setValue('123456');
+};
+
+// Clear using ref
+const handleClear = () => {
+  otpInputRef.current?.clear();
+};
+
+// Focus specific field using ref
+const handleFocus = () => {
+  otpInputRef.current?.focusField(0);
+};
 
 <OtpInputView
+  ref={otpInputRef}
   pinCount={6}
   code={code}
   onCodeChanged={setCode}
   onCodeFilled={(filledCode) => {
     console.log('OTP Verified:', filledCode);
   }}
-  secureTextEntry={secureEntry}
+  secureTextEntry={false}
   editable={true}
   error={false}
   autoFocusOnLoad
@@ -216,6 +243,10 @@ const [secureEntry, setSecureEntry] = useState(false);
                         <Text style={styles.resetButtonText}>Reset</Text>
                     </TouchableOpacity>
                 </View>
+
+                <TouchableOpacity style={styles.testButton} onPress={handleSetTestCode}>
+                    <Text style={styles.testButtonText}>Set Test Code (using ref)</Text>
+                </TouchableOpacity>
             </View>
 
             <CodeBlock code={codeExample} title="Code Example" />
@@ -379,6 +410,19 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     resetButtonText: {
+        color: '#FFFFFF',
+        fontSize: 16,
+        fontWeight: '600',
+    },
+    testButton: {
+        backgroundColor: '#FF9800',
+        paddingVertical: 14,
+        paddingHorizontal: 24,
+        borderRadius: 8,
+        alignItems: 'center',
+        marginTop: 12,
+    },
+    testButtonText: {
         color: '#FFFFFF',
         fontSize: 16,
         fontWeight: '600',
