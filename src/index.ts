@@ -1,5 +1,6 @@
 // Main component exports
 export { default, OtpInputView } from './components';
+export type { default as OTPInputView } from './components/OTPInputView';
 
 // Type exports
 export type { OTPInputProps, OTPInputState, OTPInputViewRef } from './types';

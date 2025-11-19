@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { TextInput } from 'react-native';
-import { OTPInputProps, OTPInputState } from '../types';
-declare class OTPInputView extends Component<OTPInputProps, OTPInputState> {
+import { OTPInputProps, OTPInputState, OTPInputViewRef } from '../types';
+declare class OTPInputView extends Component<OTPInputProps, OTPInputState> implements OTPInputViewRef {
     static defaultProps: Partial<OTPInputProps>;
     private fields;
     private keyboardDidHideListener?;
