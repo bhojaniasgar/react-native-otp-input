@@ -1,0 +1,109 @@
+name: Publish to NPM
+
+on:
+  push:
+    branches:
+      - Development
+
+jobs:
+  publish-npm:
+    name: Publish Package to NPM
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build package
+        run: npm run build
+
+      - name: Get package version
+        id: package-version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "📦 Package version: $VERSION"
+
+      - name: Check if version exists on NPM
+        id: check-version
+        run: |
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
+          if npm view $PACKAGE_NAME@${{ steps.package-version.outputs.version }} version 2>/dev/null; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "⚠️  Version ${{ steps.package-version.outputs.version }} already exists on NPM"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "✅ Version ${{ steps.package-version.outputs.version }} is new"
+          fi
+
+      - name: Publish to NPM
+        if: steps.check-version.outputs.exists == 'false'
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create Git Tag
+        if: steps.check-version.outputs.exists == 'false'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "v${{ steps.package-version.outputs.version }}" -m "Release v${{ steps.package-version.outputs.version }}"
+          git push origin "v${{ steps.package-version.outputs.version }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+
+      - name: Create GitHub Release
+        if: steps.check-version.outputs.exists == 'false'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.package-version.outputs.version }}
+          name: Release v${{ steps.package-version.outputs.version }}
+          body: |
+            ## 🎉 Release v${{ steps.package-version.outputs.version }}
+            
+            This release has been automatically published to NPM.
+            
+            ### Installation
+            ```bash
+            npm install @bhojaniasgar/react-native-otp-input@${{ steps.package-version.outputs.version }}
+            ```
+            
+            ### Changes
+            See the [commit history](https://github.com/${{ github.repository }}/commits/v${{ steps.package-version.outputs.version }}) for details.
+          draft: false
+          prerelease: false
+          token: ${{ secrets.TOKEN }}
+
+      - name: Skip Publishing (Version Exists)
+        if: steps.check-version.outputs.exists == 'true'
+        run: |
+          echo "⏭️  Skipping publish - version ${{ steps.package-version.outputs.version }} already exists on NPM"
+          echo "To publish a new version, update the version in package.json"
+
+      - name: Publish Summary
+        run: |
+          echo "## 📦 Publish Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Package:** $(node -p "require('./package.json').name")" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** ${{ steps.package-version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.check-version.outputs.exists }}" == "false" ]; then
+            echo "**Status:** ✅ Published successfully" >> $GITHUB_STEP_SUMMARY
+            echo "**NPM Link:** https://www.npmjs.com/package/$(node -p "require('./package.json').name")/v/${{ steps.package-version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "**Status:** ⏭️  Skipped (version already exists)" >> $GITHUB_STEP_SUMMARY
+          fi
