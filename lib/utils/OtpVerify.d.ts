@@ -2,12 +2,12 @@ interface OtpVerify {
     getOtp: () => Promise<boolean>;
     getHash: () => Promise<string[]>;
     requestHint: () => Promise<string>;
-    startOtpListener: (handler: (value: string) => void) => Promise<import('react-native').EmitterSubscription>;
-    addListener: (handler: (value: string) => void) => import('react-native').EmitterSubscription;
+    startOtpListener: (handler: (value: string) => void) => Promise<import('react-native').EmitterSubscription | null>;
+    addListener: (handler: (value: string) => void) => import('react-native').EmitterSubscription | null;
     removeListener: () => void;
 }
 export declare function getOtp(): Promise<boolean>;
-export declare function startOtpListener(handler: (value: string) => void): Promise<import('react-native').EmitterSubscription>;
+export declare function startOtpListener(handler: (value: string) => void): Promise<import('react-native').EmitterSubscription | null>;
 export declare const useOtpVerify: ({ numberOfDigits }?: {
     numberOfDigits: number;
 }) => {
@@ -32,7 +32,7 @@ export declare const useOtpVerify: ({ numberOfDigits }?: {
  */
 export declare function getHash(): Promise<string[]>;
 export declare function requestHint(): Promise<string>;
-export declare function addListener(handler: (value: string) => void): import('react-native').EmitterSubscription;
+export declare function addListener(handler: (value: string) => void): import('react-native').EmitterSubscription | null;
 export declare function removeListener(): void;
 declare const OtpVerify: OtpVerify;
 export default OtpVerify;
