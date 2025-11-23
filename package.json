@@ -13,14 +13,15 @@
     "README.md",
     "LICENSE"
   ],
-
   "scripts": {
     "build": "tsc",
-    "prepare": "npm run build",
+    "prepare": "npm run build && npm run setup:hooks",
     "lint": "eslint src --ext .ts,.tsx",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
-    "clean": "rm -rf lib"
+    "clean": "rm -rf lib",
+    "setup:hooks": "chmod +x .git/hooks/pre-push 2>/dev/null || true",
+    "branch:create": "bash scripts/create-branch.sh"
   },
   "keywords": [
     "react-native",
