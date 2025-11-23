@@ -1,6 +1,6 @@
-import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, Switch, ScrollView } from 'react-native';
-import { OtpInputView } from '@bhojaniasgar/react-native-otp-input';
+import React, { useState, useRef, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Switch, ScrollView, Platform } from 'react-native';
+import { getHash, OtpInputView, removeListener, startOtpListener } from '@bhojaniasgar/react-native-otp-input';
 import PageHeader from '@/components/examples/PageHeader';
 import CodeBlock from '@/components/examples/CodeBlock';
 import { Colors, Spacing, BorderRadius, Shadows } from '@/constants/ExampleStyles';
@@ -12,6 +12,7 @@ export default function AdvancedExample() {
     const [pinCount, setPinCount] = useState(6);
     const [showError, setShowError] = useState(false);
     const otpInputRef = useRef<any>(null);
+    const isIOS = Platform.OS === 'ios';
 
     const handleCodeFilled = (filledCode: string) => {
         console.log('OTP Filled:', filledCode);
@@ -74,6 +75,34 @@ const [pinCount, setPinCount] = useState(6);
   autoFocusOnLoad
 />`;
 
+
+    useEffect(() => {
+        if (isIOS) {
+            return;
+        }
+
+        getHash()
+            .then((hashes) => {
+                console.log('App Hash:', hashes);
+            })
+            .catch((error) => {
+                console.error('Error getting hash:', error);
+            });
+
+        startOtpListener((message: string) => {
+            console.log("Message Listerner", message)
+            if (!message) {
+                return;
+            }
+            const otp = /(\d{6})/g.exec(message);
+
+            if (!Array.isArray(otp)) {
+                return;
+            }
+            setCode(otp[1]);
+        });
+        return () => removeListener();
+    }, [isIOS]);
     return (
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
             <PageHeader
