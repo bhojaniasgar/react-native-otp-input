@@ -213,17 +213,8 @@ Examples:
 
 ## 📖 Documentation
 
-### Getting Started
-- **[Quick Start Guide](./QUICK_START.md)** - Get started in 5 minutes ⚡
+### Getting Started && Examples
 - **[Installation & Setup](#-installation)** - Installation instructions
-
-### Guides & References
-- **[Usage Guide](./USAGE.md)** - Comprehensive examples and patterns 📚
-- **[API Reference](./API.md)** - Complete API documentation 📖
-- **[Migration Guide](./MIGRATION.md)** - Upgrade from previous versions 🔄
-
-### Updates & Examples
-- **[Changelog](./CHANGELOG.md)** - Version history and updates 📝
 - **[Examples](./example/BareCli/src/examples/)** - Live code examples 💻
 
 ### Examples Include:
@@ -322,7 +313,6 @@ MIT © Asgar
 
 - 📧 Email: [im.bhojaniasgar@gmail.com](mailto:im.bhojaniasgar@gmail.com)
 - 🐛 Issues: [GitHub Issues](https://github.com/bhojaniasgar/react-native-otp-input/issues)
-- 💬 Discussions: [GitHub Discussions](https://github.com/bhojaniasgar/react-native-otp-input/discussions)
 
 ---
 

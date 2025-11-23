@@ -7,9 +7,9 @@ const LINKING_ERROR =
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo managed workflow\n';
 
-const RNOtpVerify = NativeModules.OtpVerify || NativeModules.RNOtpVerify;
+const RNOtpVerify = Platform.OS === 'android' ? (NativeModules.OtpVerify || NativeModules.RNOtpVerify) : null;
 
-if (!RNOtpVerify) {
+if (!RNOtpVerify && Platform.OS === 'android') {
   console.error(LINKING_ERROR);
   console.error('Available NativeModules:', Object.keys(NativeModules));
 }
