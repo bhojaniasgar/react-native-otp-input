@@ -215,7 +215,7 @@ Examples:
 
 ### Getting Started && Examples
 - **[Installation & Setup](#-installation)** - Installation instructions
-- **[Examples](./example/BareCli/src/examples/)** - Live code examples 💻
+- **[Examples](./example/)** - Live code examples 💻
 
 ### Examples Include:
 - 🎨 Custom styling and themes
@@ -283,7 +283,6 @@ Want to see the component in action? Check out our example apps:
 - **[Expo Example](./example/expo)** - Modern Liquid Glass Design with Expo Router
 - **[React Native CLI Example](./example/BareCLi)** - Traditional React Native setup
 
-**[View Examples Documentation →](./example/EXAMPLES.md)**
 
 ## 🤝 Contributing
 
