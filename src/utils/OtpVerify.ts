@@ -1,18 +1,7 @@
 import { NativeEventEmitter, NativeModules, Platform } from 'react-native';
 import { useEffect, useState } from 'react';
 
-const LINKING_ERROR =
-  `The package '@bhojaniasgar/react-native-otp-input' doesn't seem to be linked. Make sure: \n\n` +
-  Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
-  '- You rebuilt the app after installing the package\n' +
-  '- You are not using Expo managed workflow\n';
-
 const RNOtpVerify = Platform.OS === 'android' ? (NativeModules.OtpVerify || NativeModules.RNOtpVerify) : null;
-
-if (!RNOtpVerify && Platform.OS === 'android') {
-  console.error(LINKING_ERROR);
-  console.error('Available NativeModules:', Object.keys(NativeModules));
-}
 
 const eventEmitter = RNOtpVerify ? new NativeEventEmitter(RNOtpVerify) : null;
 
@@ -22,28 +11,32 @@ interface OtpVerify {
   requestHint: () => Promise<string>;
   startOtpListener: (
     handler: (value: string) => void
-  ) => Promise<import('react-native').EmitterSubscription>;
+  ) => Promise<import('react-native').EmitterSubscription | null>;
   addListener: (
     handler: (value: string) => void
-  ) => import('react-native').EmitterSubscription;
+  ) => import('react-native').EmitterSubscription | null;
   removeListener: () => void;
 }
 
 export async function getOtp(): Promise<boolean> {
   if (Platform.OS === 'ios') {
-    console.warn('Not Supported on iOS');
     return false;
   }
   if (!RNOtpVerify) {
-    throw new Error(LINKING_ERROR);
+    return false;
   }
   return RNOtpVerify.getOtp();
 }
 
 export function startOtpListener(
   handler: (value: string) => void
-): Promise<import('react-native').EmitterSubscription> {
-  return getOtp().then(() => addListener(handler));
+): Promise<import('react-native').EmitterSubscription | null> {
+  return getOtp().then((success) => {
+    if (!success) {
+      return null;
+    }
+    return addListener(handler);
+  });
 }
 
 export const useOtpVerify = ({ numberOfDigits } = { numberOfDigits: 0 }) => {
@@ -65,27 +58,30 @@ export const useOtpVerify = ({ numberOfDigits } = { numberOfDigits: 0 }) => {
   };
   useEffect(() => {
     if (Platform.OS === 'ios') {
-      console.warn('Not Supported on iOS');
       return;
     }
-    getHash().then(setHash);
-    startOtpListener(handleMessage);
+    getHash().then(setHash).catch(() => {
+      // Native module not available
+    });
+    startOtpListener(handleMessage).catch(() => {
+      // Native module not available
+    });
     return () => {
       removeListener();
     };
   }, []);
   const startListener = () => {
     if (Platform.OS === 'ios') {
-      console.warn('Not Supported on iOS');
       return;
     }
     setOtp('');
     setMessage('');
-    startOtpListener(handleMessage);
+    startOtpListener(handleMessage).catch(() => {
+      // Native module not available
+    });
   };
   const stopListener = () => {
     if (Platform.OS === 'ios') {
-      console.warn('Not Supported on iOS');
       return;
     }
     removeListener();
@@ -107,33 +103,29 @@ export const useOtpVerify = ({ numberOfDigits } = { numberOfDigits: 0 }) => {
  */
 export async function getHash(): Promise<string[]> {
   if (Platform.OS === 'ios') {
-    console.warn('Not Supported on iOS');
     return [];
   }
   if (!RNOtpVerify) {
-    throw new Error(LINKING_ERROR);
+    return [];
   }
   return RNOtpVerify.getHash();
 }
 
-
-
 export async function requestHint(): Promise<string> {
   if (Platform.OS === 'ios') {
-    console.warn('Not Supported on iOS');
     return '';
   }
   if (!RNOtpVerify) {
-    throw new Error(LINKING_ERROR);
+    return '';
   }
   return RNOtpVerify.requestHint();
 }
 
 export function addListener(
   handler: (value: string) => void
-): import('react-native').EmitterSubscription {
+): import('react-native').EmitterSubscription | null {
   if (!eventEmitter) {
-    throw new Error(LINKING_ERROR);
+    return null;
   }
   return eventEmitter.addListener(
     'com.asgar.otpVerify:otpReceived',

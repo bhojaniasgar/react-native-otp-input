@@ -57,6 +57,34 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: Get PR Description
+        if: steps.check-version.outputs.exists == 'false'
+        id: pr-description
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.TOKEN }}
+          script: |
+            const commit = context.payload.head_commit;
+            const commitMessage = commit.message;
+            
+            // Extract PR number from commit message (e.g., "Merge pull request #123")
+            const prMatch = commitMessage.match(/#(\d+)/);
+            
+            if (prMatch) {
+              const prNumber = parseInt(prMatch[1]);
+              const { data: pr } = await github.rest.pulls.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: prNumber
+              });
+              
+              return pr.body || 'No description provided.';
+            }
+            
+            // If no PR found, use commit message
+            return commitMessage;
+          result-encoding: string
+
       - name: Create Git Tag
         if: steps.check-version.outputs.exists == 'false'
         run: |
@@ -76,15 +104,14 @@ jobs:
           body: |
             ## 🎉 Release v${{ steps.package-version.outputs.version }}
             
-            This release has been automatically published to NPM.
+            ${{ steps.pr-description.outputs.result }}
+            
+            ---
             
             ### Installation
             ```bash
             npm install @bhojaniasgar/react-native-otp-input@${{ steps.package-version.outputs.version }}
             ```
-            
-            ### Changes
-            See the [commit history](https://github.com/${{ github.repository }}/commits/v${{ steps.package-version.outputs.version }}) for details.
           draft: false
           prerelease: false
           token: ${{ secrets.TOKEN }}
