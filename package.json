@@ -1,6 +1,6 @@
 {
   "name": "@bhojaniasgar/react-native-otp-input",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "A fully customizable, responsive OTP input component for React Native with autofill support",
   "main": "lib/index.js",
   "module": "lib/index.js",
@@ -8,7 +8,8 @@
   "files": [
     "lib",
     "src",
-    "android/src",
+    "android/src/main",
+    "android/src/sms",
     "android/build.gradle",
     "android/gradle.properties",
     "android/proguard-rules.pro",
@@ -18,6 +19,7 @@
     "react-native.config.js",
     "react-native-otp-input.podspec",
     "README.md",
+    "SMS_SETUP.md",
     "LICENSE",
     "index.d.ts"
   ],

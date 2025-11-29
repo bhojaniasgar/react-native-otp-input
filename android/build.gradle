@@ -28,6 +28,19 @@ android {
 
     }
 
+    // Check if SMS features are enabled (opt-in)
+    def enableSmsFeatures = safeExtGet('OtpVerify_enableSmsFeatures', false)
+    
+    sourceSets {
+        main {
+            manifest.srcFile 'src/main/AndroidManifest.xml'
+            if (enableSmsFeatures) {
+                // Include SMS manifest only if enabled
+                manifest.srcFile 'src/sms/AndroidManifest.xml'
+            }
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
